@@ -8,6 +8,10 @@
         // Define the variable that determines which server to show
         var server = 'other'; // Change this value to 'red', 'green', or 'blue'
 
+        // Variables to track touch events
+        var touchStartTime;
+        var longPressDuration = 500; // Duration in milliseconds for long press
+
         // Function to update the page content based on the server variable
         function updatePage(server) {
             var rectangle = document.getElementById('rectangle');
@@ -34,7 +38,7 @@
         function showSelector() {
             document.getElementById('selector').style.display = 'flex';
             document.getElementById('rectangle').style.display = 'none';
-			document.querySelector('title').textContent = 'Server Selector'; // Reset title
+            document.querySelector('title').textContent = 'Server Selector'; // Reset title
         }
 
         // Function to handle the selector option
@@ -55,12 +59,29 @@
             showSelector();
         }
 
+        // Function to handle long press on the rectangle
+        function handleTouchStart(event) {
+            touchStartTime = Date.now();
+        }
+
+        function handleTouchEnd(event) {
+            var touchDuration = Date.now() - touchStartTime;
+            if (touchDuration >= longPressDuration) {
+                showSelector();
+            }
+        }
+
         // Update the page content on page load
         window.onload = function() {
             updatePage(server);
 
             // Add double-click event listener to the rectangle
             document.getElementById('rectangle').addEventListener('dblclick', handleDoubleClick);
+
+            // Add touch event listeners for long press support
+            var rectangle = document.getElementById('rectangle');
+            rectangle.addEventListener('touchstart', handleTouchStart);
+            rectangle.addEventListener('touchend', handleTouchEnd);
         }
     </script>
     <style>
@@ -77,6 +98,7 @@
             align-items: center;
             justify-content: center;
             font-family: Arial, sans-serif;
+            position: relative;
         }
 
         .rectangle {
@@ -89,7 +111,7 @@
             font-size: 20px;
             background-color: #808080; /* Default color if 'server' is unknown */
             cursor: pointer; /* Hand cursor for the rectangle */
-            margin-bottom: 20px;
+            margin-bottom: 10px; /* Space between rectangle and note */
         }
 
         .selector-container {
@@ -190,7 +212,7 @@
     </div>
     <div id="loading-indicator" class="loading-indicator"></div>
 	<footer>
-    <p>RGB Server created by <a href="https://github.com/xAbdalla" target="_blank">xAbdalla</a></p>
-	</footer>
+        <p>RGB Server created by <a href="https://github.com/xAbdalla" target="_blank">xAbdalla</a></p>
+    </footer>
 </body>
 </html>
