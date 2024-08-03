@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Server Selector</title>
+    <script>
+        // Define the variable that determines which server to show
+        var server = 'other'; // Change this value to 'red', 'green', or 'blue'
+
+        // Function to update the page content based on the server variable
+        function updatePage(server) {
+            var rectangle = document.getElementById('rectangle');
+            var title = document.querySelector('title');
+            
+            if (server === 'green') {
+                rectangle.style.backgroundColor = '#00B050';
+                rectangle.textContent = 'Served up from Server GREEN';
+                title.textContent = 'Server GREEN';
+            } else if (server === 'red') {
+                rectangle.style.backgroundColor = '#C40C0C';
+                rectangle.textContent = 'Served up from Server RED';
+                title.textContent = 'Server RED';
+            } else if (server === 'blue') {
+                rectangle.style.backgroundColor = '#0070C0';
+                rectangle.textContent = 'Served up from Server BLUE';
+                title.textContent = 'Server BLUE';
+            } else {
+                showSelector();
+            }
+        }
+
+        // Function to show the selector option
+        function showSelector() {
+            document.getElementById('selector').style.display = 'flex';
+            document.getElementById('rectangle').style.display = 'none';
+			document.querySelector('title').textContent = 'Server Selector'; // Reset title
+        }
+
+        // Function to handle the selector option
+        function handleSelection(server) {
+            document.getElementById('selector').style.display = 'none';
+            document.getElementById('loading-indicator').style.display = 'block';
+
+            // Hide loading indicator and update page after 0.2 seconds
+            setTimeout(function() {
+                document.getElementById('loading-indicator').style.display = 'none';
+                document.getElementById('rectangle').style.display = 'flex';
+                updatePage(server);
+            }, 200); // 200 milliseconds = 0.2 seconds
+        }
+
+        // Function to handle double-click on the rectangle
+        function handleDoubleClick() {
+            showSelector();
+        }
+
+        // Update the page content on page load
+        window.onload = function() {
+            updatePage(server);
+
+            // Add double-click event listener to the rectangle
+            document.getElementById('rectangle').addEventListener('dblclick', handleDoubleClick);
+        }
+    </script>
+    <style>
+        /* Disable text selection across the whole page */
+        body {
+            user-select: none; /* For most modern browsers */
+            -webkit-user-select: none; /* For Chrome, Safari, and Opera */
+            -moz-user-select: none; /* For Firefox */
+            -ms-user-select: none; /* For Internet Explorer and Edge */
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: Arial, sans-serif;
+        }
+
+        .rectangle {
+            width: 300px;
+            height: 150px;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            background-color: #808080; /* Default color if 'server' is unknown */
+            cursor: pointer; /* Hand cursor for the rectangle */
+            margin-bottom: 20px;
+        }
+
+        .selector-container {
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .selector-container h1 {
+            margin-bottom: 20px;
+        }
+
+        .color-square-container {
+            display: flex;
+            gap: 10px; /* Space between color squares */
+        }
+
+        .color-square {
+            width: 100px;
+            height: 100px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 20px;
+            cursor: pointer; /* Hand cursor for color squares */
+        }
+
+        .color-square.green {
+            background-color: #00B050;
+        }
+
+        .color-square.red {
+            background-color: #C40C0C;
+        }
+
+        .color-square.blue {
+            background-color: #0070C0;
+        }
+
+        .loading-indicator {
+            display: none;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 24px;
+            color: #0070C0; /* Color of the spinner */
+        }
+
+        .loading-indicator::after {
+            content: '';
+            display: inline-block;
+            width: 50px;
+            height: 50px;
+            border: 5px solid #0070C0;
+            border-top: 5px solid transparent;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+		
+		footer {
+			position: absolute;
+			bottom: 10px;
+			left: 50%;
+			transform: translateX(-50%);
+			font-size: 14px;
+			color: #808080; /* Light gray color for text */
+		}
+
+		footer a {
+			color: #0070C0; /* Link color matching the blue server color */
+			text-decoration: none;
+		}
+
+		footer a:hover {
+			text-decoration: underline;
+		}
+    </style>
+</head>
+<body>
+    <div id="rectangle" class="rectangle">
+        <!-- Content will be updated based on the server variable -->
+    </div>
+    <div id="selector" class="selector-container" style="display:none;">
+        <h1>Select Server</h1>
+        <div class="color-square-container">
+            <div class="color-square red" onclick="handleSelection('red')">Red</div>
+            <div class="color-square green" onclick="handleSelection('green')">Green</div>
+            <div class="color-square blue" onclick="handleSelection('blue')">Blue</div>
+        </div>
+    </div>
+    <div id="loading-indicator" class="loading-indicator"></div>
+	<footer>
+    <p>RGB Server created by <a href="https://github.com/xAbdalla" target="_blank">xAbdalla</a></p>
+	</footer>
+</body>
+</html>
